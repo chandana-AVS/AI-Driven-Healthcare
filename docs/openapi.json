@@ -1,0 +1,5601 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AI Healthcare Assistant API",
+    "description": "Milestone 1 \u2014 Patient & Healthcare Information Management System for the AI-Driven Healthcare Assistance Platform. Use **Authorize** with the access_token from `/auth/login`.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register/patient": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Register Patient",
+        "description": "Creates the account and sends an SMS code. Login is blocked until `/auth/phone/verify` succeeds.",
+        "operationId": "register_patient_api_v1_auth_register_patient_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatientRegister"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublic"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register/healthcare-worker": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Register Healthcare Worker",
+        "operationId": "register_healthcare_worker_api_v1_auth_register_healthcare_worker_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HealthcareWorkerRegister"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublic"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register/admin": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Register Admin",
+        "description": "Creates a PENDING admin. It has no admin permissions until an existing verified admin approves it.",
+        "operationId": "register_admin_api_v1_auth_register_admin_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminRegister"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublic"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/phone/send-otp": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Send Phone Otp",
+        "description": "(Re)send the SMS verification code. The reply is the same whether or not the account exists.",
+        "operationId": "send_phone_otp_api_v1_auth_phone_send_otp_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhoneOTPRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/phone/verify": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Verify Phone",
+        "operationId": "verify_phone_api_v1_auth_phone_verify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhoneVerifyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Login",
+        "operationId": "login_api_v1_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/languages": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Supported Languages",
+        "description": "Supported language codes. Shared with future translation and voice modules.",
+        "operationId": "supported_languages_api_v1_languages_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/LanguageInfo"
+                  },
+                  "type": "array",
+                  "title": "Response Supported Languages Api V1 Languages Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/me": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get Me",
+        "operationId": "get_me_api_v1_users_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublic"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Update Me",
+        "operationId": "update_me_api_v1_users_me_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublic"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/users/me/language": {
+      "patch": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Update My Language",
+        "operationId": "update_my_language_api_v1_users_me_language_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LanguageUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublic"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/patients/me": {
+      "get": {
+        "tags": [
+          "Patients"
+        ],
+        "summary": "Get My Patient Profile",
+        "operationId": "get_my_patient_profile_api_v1_patients_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientMe"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Patients"
+        ],
+        "summary": "Update My Patient Profile",
+        "operationId": "update_my_patient_profile_api_v1_patients_me_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatientProfileUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientMe"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/patients/me/documents": {
+      "post": {
+        "tags": [
+          "Patients"
+        ],
+        "summary": "Upload My Document",
+        "operationId": "upload_my_document_api_v1_patients_me_documents_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_my_document_api_v1_patients_me_documents_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Patients"
+        ],
+        "summary": "List My Documents",
+        "operationId": "list_my_documents_api_v1_patients_me_documents_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "document_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/DocumentType"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Document Type"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentList"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/patients/me/records": {
+      "get": {
+        "tags": [
+          "Patients"
+        ],
+        "summary": "List My Records",
+        "operationId": "list_my_records_api_v1_patients_me_records_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/RecordOut"
+                  },
+                  "type": "array",
+                  "title": "Response List My Records Api V1 Patients Me Records Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/patients/me/history": {
+      "get": {
+        "tags": [
+          "Patients"
+        ],
+        "summary": "My History",
+        "operationId": "my_history_api_v1_patients_me_history_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientHistory"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/patients/me/workers": {
+      "get": {
+        "tags": [
+          "Patients"
+        ],
+        "summary": "Verified Worker Directory",
+        "description": "Verified healthcare workers a patient can choose to grant access to.",
+        "operationId": "verified_worker_directory_api_v1_patients_me_workers_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Search"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkerDirectoryEntry"
+                  },
+                  "title": "Response Verified Worker Directory Api V1 Patients Me Workers Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/patients/me/access": {
+      "get": {
+        "tags": [
+          "Patients"
+        ],
+        "summary": "List My Access Grants",
+        "operationId": "list_my_access_grants_api_v1_patients_me_access_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AccessGrantOut"
+                  },
+                  "type": "array",
+                  "title": "Response List My Access Grants Api V1 Patients Me Access Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Patients"
+        ],
+        "summary": "Grant Worker Access",
+        "operationId": "grant_worker_access_api_v1_patients_me_access_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccessGrantCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessGrantOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/patients/me/access/{grant_id}": {
+      "delete": {
+        "tags": [
+          "Patients"
+        ],
+        "summary": "Revoke Worker Access",
+        "operationId": "revoke_worker_access_api_v1_patients_me_access__grant_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "grant_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Grant Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessGrantOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/patients/{patient_id}/documents": {
+      "get": {
+        "tags": [
+          "Patients"
+        ],
+        "summary": "List Patient Documents",
+        "operationId": "list_patient_documents_api_v1_patients__patient_id__documents_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Patient Id"
+            }
+          },
+          {
+            "name": "document_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/DocumentType"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Document Type"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentList"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Patients"
+        ],
+        "summary": "Upload Patient Document",
+        "operationId": "upload_patient_document_api_v1_patients__patient_id__documents_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Patient Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_patient_document_api_v1_patients__patient_id__documents_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/patients/{patient_id}/records": {
+      "get": {
+        "tags": [
+          "Patients"
+        ],
+        "summary": "List Patient Records",
+        "operationId": "list_patient_records_api_v1_patients__patient_id__records_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Patient Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RecordOut"
+                  },
+                  "title": "Response List Patient Records Api V1 Patients  Patient Id  Records Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Patients"
+        ],
+        "summary": "Create Patient Record",
+        "operationId": "create_patient_record_api_v1_patients__patient_id__records_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Patient Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/patients/{patient_id}/history": {
+      "get": {
+        "tags": [
+          "Patients"
+        ],
+        "summary": "Patient History",
+        "operationId": "patient_history_api_v1_patients__patient_id__history_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Patient Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientHistory"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/healthcare-workers/me": {
+      "get": {
+        "tags": [
+          "Healthcare Workers"
+        ],
+        "summary": "Get My Worker Profile",
+        "operationId": "get_my_worker_profile_api_v1_healthcare_workers_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkerMe"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Healthcare Workers"
+        ],
+        "summary": "Update My Worker Profile",
+        "operationId": "update_my_worker_profile_api_v1_healthcare_workers_me_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkerProfileUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkerMe"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/healthcare-workers/me/patients": {
+      "get": {
+        "tags": [
+          "Healthcare Workers"
+        ],
+        "summary": "List Authorized Patients",
+        "operationId": "list_authorized_patients_api_v1_healthcare_workers_me_patients_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AuthorizedPatientOut"
+                  },
+                  "type": "array",
+                  "title": "Response List Authorized Patients Api V1 Healthcare Workers Me Patients Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/documents/{document_id}": {
+      "get": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Get Document Metadata",
+        "operationId": "get_document_metadata_api_v1_documents__document_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Document Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Delete Document",
+        "operationId": "delete_document_api_v1_documents__document_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Document Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/documents/{document_id}/download": {
+      "get": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Download Document",
+        "operationId": "download_document_api_v1_documents__document_id__download_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Document Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/documents/{document_id}/analysis": {
+      "post": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Analyze Document",
+        "description": "Start (or reuse) the AI reading of a document in one language. Poll GET .../analysis until COMPLETED.",
+        "operationId": "analyze_document_api_v1_documents__document_id__analysis_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Document Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Get Document Analysis",
+        "operationId": "get_document_analysis_api_v1_documents__document_id__analysis_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Document Id"
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 10,
+              "title": "Language"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/records/{record_id}": {
+      "get": {
+        "tags": [
+          "Healthcare Records"
+        ],
+        "summary": "Get Record",
+        "operationId": "get_record_api_v1_records__record_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "record_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Record Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/content/categories": {
+      "get": {
+        "tags": [
+          "Healthcare Content"
+        ],
+        "summary": "Content Categories",
+        "operationId": "content_categories_api_v1_content_categories_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array",
+                  "title": "Response Content Categories Api V1 Content Categories Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/content/types": {
+      "get": {
+        "tags": [
+          "Healthcare Content"
+        ],
+        "summary": "Content Types",
+        "operationId": "content_types_api_v1_content_types_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array",
+                  "title": "Response Content Types Api V1 Content Types Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/content": {
+      "get": {
+        "tags": [
+          "Healthcare Content"
+        ],
+        "summary": "List Published Content",
+        "description": "Public list of PUBLISHED educational content.",
+        "operationId": "list_published_content_api_v1_content_get",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ContentCategory"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Category"
+            }
+          },
+          {
+            "name": "content_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ContentType"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Content Type"
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 10
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Language"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Search"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContentOut"
+                  },
+                  "title": "Response List Published Content Api V1 Content Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/content/{content_id}": {
+      "get": {
+        "tags": [
+          "Healthcare Content"
+        ],
+        "summary": "Get Published Content",
+        "operationId": "get_published_content_api_v1_content__content_id__get",
+        "parameters": [
+          {
+            "name": "content_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Content Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/content/{content_id}/translations": {
+      "get": {
+        "tags": [
+          "Healthcare Content"
+        ],
+        "summary": "List Translations",
+        "description": "Published versions of the same item in every language.",
+        "operationId": "list_translations_api_v1_content__content_id__translations_get",
+        "parameters": [
+          {
+            "name": "content_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Content Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContentOut"
+                  },
+                  "title": "Response List Translations Api V1 Content  Content Id  Translations Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/me": {
+      "get": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Admin Me",
+        "description": "Lets a self-registered admin see whether they have been approved yet.",
+        "operationId": "admin_me_api_v1_admin_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminMe"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/admin/stats": {
+      "get": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Stats",
+        "operationId": "stats_api_v1_admin_stats_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminStats"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/admin/users": {
+      "get": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "List Users",
+        "operationId": "list_users_api_v1_admin_users_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "role",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/UserRole"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Role"
+            }
+          },
+          {
+            "name": "verification_status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/VerificationStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Verification Status"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Search"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminUserOut"
+                  },
+                  "title": "Response List Users Api V1 Admin Users Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/{user_id}/status": {
+      "patch": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Set User Status",
+        "operationId": "set_user_status_api_v1_admin_users__user_id__status_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "User Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminUserStatusUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUserOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/healthcare-workers/{worker_id}/verification": {
+      "patch": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Set Worker Verification",
+        "operationId": "set_worker_verification_api_v1_admin_healthcare_workers__worker_id__verification_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "worker_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Worker Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUserOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/admins/{admin_profile_id}/verification": {
+      "patch": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Set Admin Verification",
+        "description": "Approve or reject a self-registered administrator (checks employee ID + hospital offline).",
+        "operationId": "set_admin_verification_api_v1_admin_admins__admin_profile_id__verification_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "admin_profile_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Admin Profile Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUserOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/access": {
+      "get": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "List Access Grants",
+        "operationId": "list_access_grants_api_v1_admin_access_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AccessGrantOut"
+                  },
+                  "type": "array",
+                  "title": "Response List Access Grants Api V1 Admin Access Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Admin Grant Access",
+        "operationId": "admin_grant_access_api_v1_admin_access_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminAccessGrantCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessGrantOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/admin/access/{grant_id}": {
+      "delete": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Admin Revoke Access",
+        "operationId": "admin_revoke_access_api_v1_admin_access__grant_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "grant_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Grant Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessGrantOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/content": {
+      "get": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Admin List Content",
+        "operationId": "admin_list_content_api_v1_admin_content_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ContentStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContentOut"
+                  },
+                  "title": "Response Admin List Content Api V1 Admin Content Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Create Content",
+        "operationId": "create_content_api_v1_admin_content_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContentCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/content/{content_id}": {
+      "patch": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Update Content",
+        "operationId": "update_content_api_v1_admin_content__content_id__patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "content_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Content Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContentUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Delete Content",
+        "operationId": "delete_content_api_v1_admin_content__content_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "content_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Content Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/content/{content_id}/translate": {
+      "post": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Translate Content",
+        "description": "AI-translate an item into other languages. Copies are created as DRAFT for review before publishing.",
+        "operationId": "translate_content_api_v1_admin_content__content_id__translate_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "content_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Content Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContentTranslateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContentOut"
+                  },
+                  "title": "Response Translate Content Api V1 Admin Content  Content Id  Translate Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/audit-logs": {
+      "get": {
+        "tags": [
+          "Administration"
+        ],
+        "summary": "Audit Logs",
+        "operationId": "audit_logs_api_v1_admin_audit_logs_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 500,
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 60
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Action"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuditLogOut"
+                  },
+                  "title": "Response Audit Logs Api V1 Admin Audit Logs Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ai/status": {
+      "get": {
+        "tags": [
+          "AI Language Engine"
+        ],
+        "summary": "Ai Status",
+        "operationId": "ai_status_api_v1_ai_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AIStatus"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/ai/translate": {
+      "post": {
+        "tags": [
+          "AI Language Engine"
+        ],
+        "summary": "Translate",
+        "description": "Translate a prescription, discharge summary or instructions into an Indian language, with a simple version.",
+        "operationId": "translate_api_v1_ai_translate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TranslateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TranslationResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/ai/simplify": {
+      "post": {
+        "tags": [
+          "AI Language Engine"
+        ],
+        "summary": "Simplify",
+        "description": "Rewrite medical text in simple words with practical guidance and a glossary.",
+        "operationId": "simplify_api_v1_ai_simplify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimplifyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimplificationResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/ai/extract": {
+      "post": {
+        "tags": [
+          "AI Language Engine"
+        ],
+        "summary": "Extract",
+        "description": "Find diseases, medicines, tests and treatment instructions in medical text.",
+        "operationId": "extract_api_v1_ai_extract_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractionResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/ai/symptoms": {
+      "post": {
+        "tags": [
+          "AI Language Engine"
+        ],
+        "summary": "Symptoms",
+        "description": "Symptom awareness: urgency, possible causes, self-care, prevention, plus related knowledge-base articles.",
+        "operationId": "symptoms_api_v1_ai_symptoms_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SymptomRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SymptomResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AIStatus": {
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "daily_limit": {
+            "type": "integer",
+            "title": "Daily Limit"
+          }
+        },
+        "type": "object",
+        "required": [
+          "enabled",
+          "model",
+          "daily_limit"
+        ],
+        "title": "AIStatus"
+      },
+      "AccessGrantCreate": {
+        "properties": {
+          "worker_identifier": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Worker Identifier"
+          },
+          "healthcare_worker_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Healthcare Worker Id"
+          }
+        },
+        "type": "object",
+        "title": "AccessGrantCreate",
+        "description": "Patient grants a healthcare worker access, identified by email/phone or worker profile id."
+      },
+      "AccessGrantOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Patient Id"
+          },
+          "patient_name": {
+            "type": "string",
+            "title": "Patient Name"
+          },
+          "healthcare_worker_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Healthcare Worker Id"
+          },
+          "worker_name": {
+            "type": "string",
+            "title": "Worker Name"
+          },
+          "worker_designation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Worker Designation"
+          },
+          "worker_organization": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Worker Organization"
+          },
+          "access_status": {
+            "type": "string",
+            "title": "Access Status"
+          },
+          "granted_by": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Granted By"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "revoked_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revoked At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "patient_id",
+          "patient_name",
+          "healthcare_worker_id",
+          "worker_name",
+          "access_status",
+          "created_at"
+        ],
+        "title": "AccessGrantOut"
+      },
+      "AdminAccessGrantCreate": {
+        "properties": {
+          "patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Patient Id"
+          },
+          "healthcare_worker_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Healthcare Worker Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "patient_id",
+          "healthcare_worker_id"
+        ],
+        "title": "AdminAccessGrantCreate"
+      },
+      "AdminMe": {
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserPublic"
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AdminProfileOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verification_status": {
+            "type": "string",
+            "title": "Verification Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user",
+          "verification_status"
+        ],
+        "title": "AdminMe"
+      },
+      "AdminProfileOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "User Id"
+          },
+          "employee_id": {
+            "type": "string",
+            "title": "Employee Id"
+          },
+          "hospital_name": {
+            "type": "string",
+            "title": "Hospital Name"
+          },
+          "verification_status": {
+            "type": "string",
+            "title": "Verification Status"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "user_id",
+          "employee_id",
+          "hospital_name",
+          "verification_status",
+          "created_at"
+        ],
+        "title": "AdminProfileOut"
+      },
+      "AdminRegister": {
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 2,
+            "title": "Full Name"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "email"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          },
+          "preferred_language": {
+            "type": "string",
+            "title": "Preferred Language",
+            "default": "en"
+          },
+          "employee_id": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 2,
+            "title": "Employee Id"
+          },
+          "hospital_name": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 2,
+            "title": "Hospital Name"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "full_name",
+          "phone",
+          "password",
+          "employee_id",
+          "hospital_name"
+        ],
+        "title": "AdminRegister",
+        "description": "Self-registration for administrators. The account stays PENDING until an existing admin approves it."
+      },
+      "AdminStats": {
+        "properties": {
+          "total_patients": {
+            "type": "integer",
+            "title": "Total Patients"
+          },
+          "total_healthcare_workers": {
+            "type": "integer",
+            "title": "Total Healthcare Workers"
+          },
+          "pending_verifications": {
+            "type": "integer",
+            "title": "Pending Verifications"
+          },
+          "pending_admin_verifications": {
+            "type": "integer",
+            "title": "Pending Admin Verifications"
+          },
+          "verified_workers": {
+            "type": "integer",
+            "title": "Verified Workers"
+          },
+          "total_documents": {
+            "type": "integer",
+            "title": "Total Documents"
+          },
+          "active_access_grants": {
+            "type": "integer",
+            "title": "Active Access Grants"
+          },
+          "published_content": {
+            "type": "integer",
+            "title": "Published Content"
+          },
+          "total_content": {
+            "type": "integer",
+            "title": "Total Content"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_patients",
+          "total_healthcare_workers",
+          "pending_verifications",
+          "pending_admin_verifications",
+          "verified_workers",
+          "total_documents",
+          "active_access_grants",
+          "published_content",
+          "total_content"
+        ],
+        "title": "AdminStats"
+      },
+      "AdminUserOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "email"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "preferred_language": {
+            "type": "string",
+            "title": "Preferred Language"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          },
+          "is_verified": {
+            "type": "boolean",
+            "title": "Is Verified"
+          },
+          "phone_verified": {
+            "type": "boolean",
+            "title": "Phone Verified"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          },
+          "worker_profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WorkerProfileOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "admin_profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AdminProfileOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "patient_profile_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Patient Profile Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "full_name",
+          "role",
+          "preferred_language",
+          "is_active",
+          "is_verified",
+          "phone_verified",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "AdminUserOut"
+      },
+      "AdminUserStatusUpdate": {
+        "properties": {
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          }
+        },
+        "type": "object",
+        "required": [
+          "is_active"
+        ],
+        "title": "AdminUserStatusUpdate"
+      },
+      "AnalysisOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Document Id"
+          },
+          "language_code": {
+            "type": "string",
+            "title": "Language Code"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DocumentInsight"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "document_id",
+          "language_code",
+          "status",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "AnalysisOut"
+      },
+      "AnalysisRequest": {
+        "properties": {
+          "language": {
+            "type": "string",
+            "title": "Language"
+          },
+          "force": {
+            "type": "boolean",
+            "title": "Force",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "language"
+        ],
+        "title": "AnalysisRequest"
+      },
+      "AuditLogOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "actor_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor Id"
+          },
+          "actor_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor Name"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "resource_type": {
+            "type": "string",
+            "title": "Resource Type"
+          },
+          "resource_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resource Id"
+          },
+          "patient_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Patient Id"
+          },
+          "ip_address": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ip Address"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "action",
+          "resource_type",
+          "created_at"
+        ],
+        "title": "AuditLogOut"
+      },
+      "AuthorizedPatientOut": {
+        "properties": {
+          "patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Patient Id"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "email"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "preferred_language": {
+            "type": "string",
+            "title": "Preferred Language"
+          },
+          "date_of_birth": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date Of Birth"
+          },
+          "gender": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gender"
+          },
+          "access_granted_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Access Granted At"
+          },
+          "document_count": {
+            "type": "integer",
+            "title": "Document Count",
+            "default": 0
+          },
+          "record_count": {
+            "type": "integer",
+            "title": "Record Count",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "patient_id",
+          "full_name",
+          "preferred_language",
+          "access_granted_at"
+        ],
+        "title": "AuthorizedPatientOut"
+      },
+      "Body_upload_my_document_api_v1_patients_me_documents_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          },
+          "document_type": {
+            "$ref": "#/components/schemas/DocumentType"
+          },
+          "document_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Date"
+          },
+          "document_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file",
+          "document_type"
+        ],
+        "title": "Body_upload_my_document_api_v1_patients_me_documents_post"
+      },
+      "Body_upload_patient_document_api_v1_patients__patient_id__documents_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          },
+          "document_type": {
+            "$ref": "#/components/schemas/DocumentType"
+          },
+          "document_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Date"
+          },
+          "document_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file",
+          "document_type"
+        ],
+        "title": "Body_upload_patient_document_api_v1_patients__patient_id__documents_post"
+      },
+      "Condition": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "Disease or diagnosis exactly as written in the source"
+          },
+          "simple_explanation": {
+            "type": "string",
+            "title": "Simple Explanation",
+            "description": "What it means, in plain words, in the target language"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "simple_explanation"
+        ],
+        "title": "Condition"
+      },
+      "ContentCategory": {
+        "type": "string",
+        "enum": [
+          "GENERAL_HEALTH",
+          "MATERNAL_HEALTH",
+          "CHILD_HEALTHCARE",
+          "ELDERLY_CARE",
+          "PREVENTIVE_HEALTHCARE",
+          "COMMON_DISEASES"
+        ],
+        "title": "ContentCategory"
+      },
+      "ContentCreate": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 3,
+            "title": "Title"
+          },
+          "body": {
+            "type": "string",
+            "maxLength": 50000,
+            "minLength": 10,
+            "title": "Body"
+          },
+          "category": {
+            "$ref": "#/components/schemas/ContentCategory"
+          },
+          "content_type": {
+            "$ref": "#/components/schemas/ContentType",
+            "default": "ARTICLE"
+          },
+          "language_code": {
+            "type": "string",
+            "title": "Language Code",
+            "default": "en"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ContentStatus",
+            "default": "DRAFT"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "title",
+          "body",
+          "category"
+        ],
+        "title": "ContentCreate"
+      },
+      "ContentOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "body": {
+            "type": "string",
+            "title": "Body"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "content_type": {
+            "type": "string",
+            "title": "Content Type"
+          },
+          "language_code": {
+            "type": "string",
+            "title": "Language Code"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "translation_group_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Translation Group Id"
+          },
+          "created_by": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created By"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "body",
+          "category",
+          "content_type",
+          "language_code",
+          "status",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ContentOut"
+      },
+      "ContentStatus": {
+        "type": "string",
+        "enum": [
+          "DRAFT",
+          "PUBLISHED",
+          "INACTIVE"
+        ],
+        "title": "ContentStatus"
+      },
+      "ContentTranslateRequest": {
+        "properties": {
+          "languages": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 6,
+            "minItems": 1,
+            "title": "Languages"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "languages"
+        ],
+        "title": "ContentTranslateRequest"
+      },
+      "ContentType": {
+        "type": "string",
+        "enum": [
+          "ARTICLE",
+          "FAQ",
+          "DISEASE_INFO"
+        ],
+        "title": "ContentType",
+        "description": "Knowledge-base entry kind (Milestone 2)."
+      },
+      "ContentUpdate": {
+        "properties": {
+          "title": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255,
+                "minLength": 3
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "body": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 50000,
+                "minLength": 10
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Body"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ContentCategory"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "content_type": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ContentType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "language_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language Code"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ContentStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ContentUpdate"
+      },
+      "DocumentInsight": {
+        "properties": {
+          "is_medical_document": {
+            "type": "boolean",
+            "title": "Is Medical Document"
+          },
+          "document_kind": {
+            "type": "string",
+            "title": "Document Kind",
+            "description": "e.g. prescription, discharge summary, lab report"
+          },
+          "source_language": {
+            "type": "string",
+            "title": "Source Language",
+            "description": "Language(s) the document is written in"
+          },
+          "readability": {
+            "type": "string",
+            "enum": [
+              "clear",
+              "partly_unclear",
+              "unreadable"
+            ],
+            "title": "Readability"
+          },
+          "extracted_text": {
+            "type": "string",
+            "title": "Extracted Text",
+            "description": "Faithful transcription of the document text in its original language"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary",
+            "description": "3-6 short sentences in the target language a patient can understand"
+          },
+          "translation": {
+            "type": "string",
+            "title": "Translation",
+            "description": "Complete translation of the document into the target language, in simple words"
+          },
+          "entities": {
+            "$ref": "#/components/schemas/MedicalEntities"
+          },
+          "glossary": {
+            "items": {
+              "$ref": "#/components/schemas/Term"
+            },
+            "type": "array",
+            "title": "Glossary"
+          },
+          "warning_signs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warning Signs",
+            "description": "Danger signs that need urgent care, in the target language"
+          },
+          "unclear_parts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Unclear Parts",
+            "description": "Words or sections that could not be read with confidence"
+          }
+        },
+        "type": "object",
+        "required": [
+          "is_medical_document",
+          "document_kind",
+          "source_language",
+          "readability",
+          "extracted_text",
+          "summary",
+          "translation",
+          "entities",
+          "glossary",
+          "warning_signs",
+          "unclear_parts"
+        ],
+        "title": "DocumentInsight"
+      },
+      "DocumentList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DocumentOut"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "DocumentList"
+      },
+      "DocumentOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Patient Id"
+          },
+          "uploaded_by": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Uploaded By"
+          },
+          "document_name": {
+            "type": "string",
+            "title": "Document Name"
+          },
+          "document_type": {
+            "$ref": "#/components/schemas/DocumentType"
+          },
+          "mime_type": {
+            "type": "string",
+            "title": "Mime Type"
+          },
+          "file_size": {
+            "type": "integer",
+            "title": "File Size"
+          },
+          "document_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Date"
+          },
+          "processing_status": {
+            "type": "string",
+            "title": "Processing Status"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "patient_id",
+          "document_name",
+          "document_type",
+          "mime_type",
+          "file_size",
+          "processing_status",
+          "created_at"
+        ],
+        "title": "DocumentOut",
+        "description": "Document metadata. storage_key (the private path) is intentionally never exposed."
+      },
+      "DocumentType": {
+        "type": "string",
+        "enum": [
+          "PRESCRIPTION",
+          "DISCHARGE_SUMMARY",
+          "DIAGNOSTIC_REPORT",
+          "LAB_REPORT",
+          "OTHER"
+        ],
+        "title": "DocumentType"
+      },
+      "ExtractRequest": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 20000,
+            "minLength": 2,
+            "title": "Text"
+          },
+          "language": {
+            "type": "string",
+            "title": "Language",
+            "default": "en"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "ExtractRequest"
+      },
+      "ExtractionResult": {
+        "properties": {
+          "summary": {
+            "type": "string",
+            "title": "Summary",
+            "description": "One or two sentences in the target language"
+          },
+          "entities": {
+            "$ref": "#/components/schemas/MedicalEntities"
+          }
+        },
+        "type": "object",
+        "required": [
+          "summary",
+          "entities"
+        ],
+        "title": "ExtractionResult"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthcareWorkerRegister": {
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 2,
+            "title": "Full Name"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "email"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          },
+          "preferred_language": {
+            "type": "string",
+            "title": "Preferred Language",
+            "default": "en"
+          },
+          "designation": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 2,
+            "title": "Designation"
+          },
+          "organization": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 2,
+            "title": "Organization"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "full_name",
+          "phone",
+          "password",
+          "designation",
+          "organization"
+        ],
+        "title": "HealthcareWorkerRegister"
+      },
+      "HistoryEntry": {
+        "properties": {
+          "entry_type": {
+            "type": "string",
+            "enum": [
+              "RECORD",
+              "DOCUMENT"
+            ],
+            "title": "Entry Type"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "record": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RecordOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "document": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DocumentOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "entry_type",
+          "date",
+          "timestamp",
+          "title",
+          "category"
+        ],
+        "title": "HistoryEntry",
+        "description": "Unified chronological timeline entry combining records and documents."
+      },
+      "Instruction": {
+        "properties": {
+          "original": {
+            "type": "string",
+            "title": "Original",
+            "description": "The instruction as written in the source"
+          },
+          "simple": {
+            "type": "string",
+            "title": "Simple",
+            "description": "The same instruction rewritten in simple target-language words"
+          }
+        },
+        "type": "object",
+        "required": [
+          "original",
+          "simple"
+        ],
+        "title": "Instruction"
+      },
+      "LabTest": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "result": {
+            "type": "string",
+            "title": "Result",
+            "description": "Value and unit exactly as written; empty if none"
+          },
+          "simple_explanation": {
+            "type": "string",
+            "title": "Simple Explanation",
+            "description": "What the test checks and what the result means, in plain target-language words"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "result",
+          "simple_explanation"
+        ],
+        "title": "LabTest"
+      },
+      "LanguageInfo": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "native": {
+            "type": "string",
+            "title": "Native"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "name",
+          "native"
+        ],
+        "title": "LanguageInfo"
+      },
+      "LanguageUpdate": {
+        "properties": {
+          "preferred_language": {
+            "type": "string",
+            "title": "Preferred Language"
+          }
+        },
+        "type": "object",
+        "required": [
+          "preferred_language"
+        ],
+        "title": "LanguageUpdate"
+      },
+      "LoginRequest": {
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 3,
+            "title": "Identifier",
+            "description": "Email address or phone number"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "identifier",
+          "password"
+        ],
+        "title": "LoginRequest"
+      },
+      "MedicalEntities": {
+        "properties": {
+          "conditions": {
+            "items": {
+              "$ref": "#/components/schemas/Condition"
+            },
+            "type": "array",
+            "title": "Conditions"
+          },
+          "medications": {
+            "items": {
+              "$ref": "#/components/schemas/Medication"
+            },
+            "type": "array",
+            "title": "Medications"
+          },
+          "tests": {
+            "items": {
+              "$ref": "#/components/schemas/LabTest"
+            },
+            "type": "array",
+            "title": "Tests"
+          },
+          "instructions": {
+            "items": {
+              "$ref": "#/components/schemas/Instruction"
+            },
+            "type": "array",
+            "title": "Instructions",
+            "description": "Treatment, diet, rest and care instructions"
+          },
+          "symptoms": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Symptoms",
+            "description": "Symptoms mentioned, in the target language"
+          },
+          "follow_up": {
+            "type": "string",
+            "title": "Follow Up",
+            "description": "Next visit or review advice in the target language; empty if none"
+          }
+        },
+        "type": "object",
+        "required": [
+          "conditions",
+          "medications",
+          "tests",
+          "instructions",
+          "symptoms",
+          "follow_up"
+        ],
+        "title": "MedicalEntities"
+      },
+      "Medication": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "Medicine name exactly as written, in English letters"
+          },
+          "name_local": {
+            "type": "string",
+            "title": "Name Local",
+            "description": "How to say the medicine name in the target-language script; empty for English"
+          },
+          "dosage": {
+            "type": "string",
+            "title": "Dosage",
+            "description": "Strength / amount per dose exactly as written, e.g. '500 mg', '1 tablet'"
+          },
+          "frequency": {
+            "type": "string",
+            "title": "Frequency",
+            "description": "How often, in plain target-language words, e.g. 'twice a day'"
+          },
+          "timing": {
+            "type": "string",
+            "title": "Timing",
+            "description": "When to take it (before/after food, morning/night) in the target language"
+          },
+          "duration": {
+            "type": "string",
+            "title": "Duration",
+            "description": "For how long, in the target language; empty if not stated"
+          },
+          "purpose": {
+            "type": "string",
+            "title": "Purpose",
+            "description": "What the medicine is for, in plain target-language words; empty if not stated or not clear"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "name_local",
+          "dosage",
+          "frequency",
+          "timing",
+          "duration",
+          "purpose"
+        ],
+        "title": "Medication"
+      },
+      "PatientHistory": {
+        "properties": {
+          "patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Patient Id"
+          },
+          "patient_name": {
+            "type": "string",
+            "title": "Patient Name"
+          },
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/HistoryEntry"
+            },
+            "type": "array",
+            "title": "Entries"
+          }
+        },
+        "type": "object",
+        "required": [
+          "patient_id",
+          "patient_name",
+          "entries"
+        ],
+        "title": "PatientHistory"
+      },
+      "PatientMe": {
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserPublic"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/PatientProfileOut"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user",
+          "profile"
+        ],
+        "title": "PatientMe"
+      },
+      "PatientProfileOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "User Id"
+          },
+          "date_of_birth": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date Of Birth"
+          },
+          "gender": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gender"
+          },
+          "address": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address"
+          },
+          "emergency_contact_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Emergency Contact Name"
+          },
+          "emergency_contact_phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Emergency Contact Phone"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "user_id",
+          "created_at"
+        ],
+        "title": "PatientProfileOut"
+      },
+      "PatientProfileUpdate": {
+        "properties": {
+          "date_of_birth": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date Of Birth"
+          },
+          "gender": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 30
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gender"
+          },
+          "address": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address"
+          },
+          "emergency_contact_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 150
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Emergency Contact Name"
+          },
+          "emergency_contact_phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Emergency Contact Phone"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "PatientProfileUpdate"
+      },
+      "PatientRegister": {
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 2,
+            "title": "Full Name"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "email"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          },
+          "preferred_language": {
+            "type": "string",
+            "title": "Preferred Language",
+            "default": "en"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "full_name",
+          "phone",
+          "password"
+        ],
+        "title": "PatientRegister"
+      },
+      "PhoneOTPRequest": {
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 3,
+            "title": "Identifier",
+            "description": "Phone number or email of the account"
+          }
+        },
+        "type": "object",
+        "required": [
+          "identifier"
+        ],
+        "title": "PhoneOTPRequest"
+      },
+      "PhoneVerifyRequest": {
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 3,
+            "title": "Identifier",
+            "description": "Phone number or email of the account"
+          },
+          "code": {
+            "type": "string",
+            "pattern": "^[0-9]{4,8}$",
+            "title": "Code",
+            "description": "The code received by SMS"
+          }
+        },
+        "type": "object",
+        "required": [
+          "identifier",
+          "code"
+        ],
+        "title": "PhoneVerifyRequest"
+      },
+      "PossibleCause": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "explanation": {
+            "type": "string",
+            "title": "Explanation",
+            "description": "Plain-language description in the target language"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "explanation"
+        ],
+        "title": "PossibleCause"
+      },
+      "RecordCreate": {
+        "properties": {
+          "record_type": {
+            "$ref": "#/components/schemas/RecordType"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 2,
+            "title": "Title"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 10000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "record_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Record Date"
+          },
+          "document_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "record_type",
+          "title",
+          "record_date"
+        ],
+        "title": "RecordCreate"
+      },
+      "RecordOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Patient Id"
+          },
+          "created_by": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created By"
+          },
+          "created_by_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created By Name"
+          },
+          "record_type": {
+            "type": "string",
+            "title": "Record Type"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "record_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Record Date"
+          },
+          "document_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "patient_id",
+          "record_type",
+          "title",
+          "record_date",
+          "created_at"
+        ],
+        "title": "RecordOut"
+      },
+      "RecordType": {
+        "type": "string",
+        "enum": [
+          "CONSULTATION",
+          "DIAGNOSIS",
+          "PRESCRIPTION",
+          "DISCHARGE",
+          "LAB_RESULT",
+          "IMMUNIZATION",
+          "DOCUMENT_UPLOAD",
+          "NOTE",
+          "OTHER"
+        ],
+        "title": "RecordType"
+      },
+      "RelatedContent": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "content_type": {
+            "type": "string",
+            "title": "Content Type"
+          },
+          "language_code": {
+            "type": "string",
+            "title": "Language Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "content_type",
+          "language_code"
+        ],
+        "title": "RelatedContent"
+      },
+      "SimplificationResult": {
+        "properties": {
+          "simple_explanation": {
+            "type": "string",
+            "title": "Simple Explanation"
+          },
+          "key_points": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Key Points"
+          },
+          "guidance": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Guidance",
+            "description": "Practical, context-based things the patient should do, in the target language"
+          },
+          "questions_for_doctor": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Questions For Doctor",
+            "description": "Helpful questions the patient could ask their doctor"
+          },
+          "glossary": {
+            "items": {
+              "$ref": "#/components/schemas/Term"
+            },
+            "type": "array",
+            "title": "Glossary"
+          }
+        },
+        "type": "object",
+        "required": [
+          "simple_explanation",
+          "key_points",
+          "guidance",
+          "questions_for_doctor",
+          "glossary"
+        ],
+        "title": "SimplificationResult"
+      },
+      "SimplifyRequest": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 20000,
+            "minLength": 2,
+            "title": "Text"
+          },
+          "language": {
+            "type": "string",
+            "title": "Language",
+            "default": "en"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "SimplifyRequest"
+      },
+      "SymptomRequest": {
+        "properties": {
+          "symptoms": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 3,
+            "title": "Symptoms"
+          },
+          "language": {
+            "type": "string",
+            "title": "Language",
+            "default": "en"
+          },
+          "age": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 120.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Age"
+          },
+          "gender": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 20
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gender"
+          },
+          "duration": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "symptoms"
+        ],
+        "title": "SymptomRequest"
+      },
+      "SymptomResponse": {
+        "properties": {
+          "urgency": {
+            "type": "string",
+            "enum": [
+              "EMERGENCY",
+              "SEE_DOCTOR_TODAY",
+              "SEE_DOCTOR_SOON",
+              "SELF_CARE"
+            ],
+            "title": "Urgency"
+          },
+          "urgency_reason": {
+            "type": "string",
+            "title": "Urgency Reason"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "possible_causes": {
+            "items": {
+              "$ref": "#/components/schemas/PossibleCause"
+            },
+            "type": "array",
+            "title": "Possible Causes",
+            "description": "Common causes to be aware of; never a diagnosis"
+          },
+          "self_care": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Self Care"
+          },
+          "see_doctor_if": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "See Doctor If"
+          },
+          "emergency_signs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Emergency Signs"
+          },
+          "prevention": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Prevention"
+          },
+          "related_content": {
+            "items": {
+              "$ref": "#/components/schemas/RelatedContent"
+            },
+            "type": "array",
+            "title": "Related Content"
+          },
+          "disclaimer": {
+            "type": "string",
+            "title": "Disclaimer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "urgency",
+          "urgency_reason",
+          "summary",
+          "possible_causes",
+          "self_care",
+          "see_doctor_if",
+          "emergency_signs",
+          "prevention",
+          "related_content",
+          "disclaimer"
+        ],
+        "title": "SymptomResponse"
+      },
+      "Term": {
+        "properties": {
+          "term": {
+            "type": "string",
+            "title": "Term",
+            "description": "Medical word or abbreviation from the source, e.g. 'BD', 'hypertension'"
+          },
+          "meaning": {
+            "type": "string",
+            "title": "Meaning",
+            "description": "Plain meaning in the target language"
+          }
+        },
+        "type": "object",
+        "required": [
+          "term",
+          "meaning"
+        ],
+        "title": "Term"
+      },
+      "TextType": {
+        "type": "string",
+        "enum": [
+          "PRESCRIPTION",
+          "DISCHARGE_SUMMARY",
+          "INSTRUCTIONS",
+          "GENERAL"
+        ],
+        "title": "TextType",
+        "description": "What kind of medical text is being translated, so the AI keeps the right structure."
+      },
+      "TokenResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type",
+            "default": "bearer"
+          },
+          "expires_in": {
+            "type": "integer",
+            "title": "Expires In"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserSummary"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "expires_in",
+          "user"
+        ],
+        "title": "TokenResponse"
+      },
+      "TranslateRequest": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 20000,
+            "minLength": 2,
+            "title": "Text"
+          },
+          "target_language": {
+            "type": "string",
+            "title": "Target Language"
+          },
+          "text_type": {
+            "$ref": "#/components/schemas/TextType",
+            "default": "GENERAL"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "text",
+          "target_language"
+        ],
+        "title": "TranslateRequest"
+      },
+      "TranslationResult": {
+        "properties": {
+          "detected_language": {
+            "type": "string",
+            "title": "Detected Language"
+          },
+          "translation": {
+            "type": "string",
+            "title": "Translation",
+            "description": "Faithful translation into the target language"
+          },
+          "simplified": {
+            "type": "string",
+            "title": "Simplified",
+            "description": "The same content rewritten in very simple target-language words"
+          },
+          "key_points": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Key Points",
+            "description": "3-6 most important points, in the target language"
+          },
+          "glossary": {
+            "items": {
+              "$ref": "#/components/schemas/Term"
+            },
+            "type": "array",
+            "title": "Glossary"
+          }
+        },
+        "type": "object",
+        "required": [
+          "detected_language",
+          "translation",
+          "simplified",
+          "key_points",
+          "glossary"
+        ],
+        "title": "TranslationResult"
+      },
+      "UserPublic": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "email"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "preferred_language": {
+            "type": "string",
+            "title": "Preferred Language"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          },
+          "is_verified": {
+            "type": "boolean",
+            "title": "Is Verified"
+          },
+          "phone_verified": {
+            "type": "boolean",
+            "title": "Phone Verified"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "full_name",
+          "role",
+          "preferred_language",
+          "is_active",
+          "is_verified",
+          "phone_verified",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "UserPublic",
+        "description": "Safe user representation \u2014 never includes password_hash."
+      },
+      "UserRole": {
+        "type": "string",
+        "enum": [
+          "PATIENT",
+          "HEALTHCARE_WORKER",
+          "ADMIN"
+        ],
+        "title": "UserRole"
+      },
+      "UserSummary": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "preferred_language": {
+            "type": "string",
+            "title": "Preferred Language"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "full_name",
+          "role",
+          "preferred_language"
+        ],
+        "title": "UserSummary"
+      },
+      "UserUpdate": {
+        "properties": {
+          "full_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 150,
+                "minLength": 2
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Full Name"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "email"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "preferred_language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferred Language"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "UserUpdate",
+        "description": "Fields a user may change on themselves. role / is_active / is_verified are deliberately absent."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VerificationStatus": {
+        "type": "string",
+        "enum": [
+          "PENDING",
+          "VERIFIED",
+          "REJECTED"
+        ],
+        "title": "VerificationStatus"
+      },
+      "VerificationUpdate": {
+        "properties": {
+          "verification_status": {
+            "$ref": "#/components/schemas/VerificationStatus"
+          }
+        },
+        "type": "object",
+        "required": [
+          "verification_status"
+        ],
+        "title": "VerificationUpdate"
+      },
+      "WorkerDirectoryEntry": {
+        "properties": {
+          "healthcare_worker_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Healthcare Worker Id"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "designation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Designation"
+          },
+          "organization": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Organization"
+          }
+        },
+        "type": "object",
+        "required": [
+          "healthcare_worker_id",
+          "full_name"
+        ],
+        "title": "WorkerDirectoryEntry",
+        "description": "Minimal info about a verified worker so patients can choose whom to grant access."
+      },
+      "WorkerMe": {
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserPublic"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/WorkerProfileOut"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user",
+          "profile"
+        ],
+        "title": "WorkerMe"
+      },
+      "WorkerProfileOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "User Id"
+          },
+          "designation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Designation"
+          },
+          "organization": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Organization"
+          },
+          "verification_status": {
+            "type": "string",
+            "title": "Verification Status"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "user_id",
+          "verification_status",
+          "created_at"
+        ],
+        "title": "WorkerProfileOut"
+      },
+      "WorkerProfileUpdate": {
+        "properties": {
+          "designation": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Designation"
+          },
+          "organization": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 150
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Organization"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "WorkerProfileUpdate"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "description": "Paste the access_token returned by /auth/login",
+        "scheme": "bearer"
+      }
+    }
+  }
+}
