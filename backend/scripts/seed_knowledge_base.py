@@ -1,4 +1,5 @@
-"""Seed the multilingual knowledge base (Milestone 2): healthcare FAQs and common-disease information in English.
+"""Seed the multilingual knowledge base (Milestone 2): healthcare FAQs, common-disease information and
+health-awareness articles in English.
 
 Usage (from backend/):
     python -m scripts.seed_knowledge_base                       # insert as DRAFT (review, then publish in the admin panel)
@@ -113,6 +114,69 @@ DISEASES = [
 ]
 
 
+AWARENESS = [
+    ("Protect your family from mosquito bites", "PREVENTIVE_HEALTHCARE",
+     "Mosquitoes spread malaria, dengue and chikungunya. Stopping the bites stops the illness.\n\n"
+     "- Sleep under a mosquito net every night, especially children and pregnant women. Tuck the net under the mattress.\n"
+     "- Empty standing water once a week: coolers, tyres, pots, coconut shells and flower vases. Dengue mosquitoes breed in clean water.\n"
+     "- Cover water drums and tanks with a tight lid.\n"
+     "- Wear full-sleeve clothes in the evening and early morning, and use mosquito repellent.\n"
+     "- Allow the health worker to spray your house when the spraying team visits.\n\n"
+     "If anyone at home gets fever, get a blood test at the health centre early. Do not wait for it to get worse."),
+    ("Staying healthy during pregnancy", "MATERNAL_HEALTH",
+     "Regular check-ups keep mother and baby safe.\n\n"
+     "- Register your pregnancy at the health centre or with the ASHA worker as early as possible.\n"
+     "- Have at least four check-ups. Get your blood pressure, weight, blood (haemoglobin) and urine tested.\n"
+     "- Take the iron-folic acid and calcium tablets given by the health centre every day.\n"
+     "- Get the tetanus (Td) injections.\n"
+     "- Eat an extra meal every day: green leafy vegetables, dal, eggs, milk, fruits. Rest for two hours in the day.\n"
+     "- Plan to deliver the baby in a hospital. Keep the 108 number and money for transport ready.\n\n"
+     "Go to hospital at once if you have bleeding, severe headache or blurred vision, swelling of face and hands, fits, "
+     "high fever, leaking water, or if the baby moves less than usual."),
+    ("Caring for your newborn baby", "CHILD_HEALTHCARE",
+     "- Start breastfeeding within one hour of birth. The first yellow milk (colostrum) protects the baby from infections.\n"
+     "- Give only breast milk for the first six months: no water, honey, sugar water or animal milk.\n"
+     "- Keep the baby warm: skin-to-skin contact with the mother, cover the head and feet, delay the first bath.\n"
+     "- Keep the cord clean and dry. Do not put anything on it.\n"
+     "- Wash your hands with soap before touching the baby.\n"
+     "- Get the birth vaccines (BCG, OPV, Hepatitis B) before leaving the hospital.\n\n"
+     "Danger signs (go to hospital at once): not feeding well, fast or difficult breathing, fits, the baby feels too cold "
+     "or too hot, yellow palms and soles, redness or pus around the cord."),
+    ("Eating well and preventing anaemia", "GENERAL_HEALTH",
+     "Anaemia (low blood) makes people tired and weak and is very common in women and children.\n\n"
+     "- Eat iron-rich foods every day: green leafy vegetables (spinach, drumstick leaves), dal, ragi, jaggery, eggs, meat and fish.\n"
+     "- Eat a fruit rich in vitamin C (amla, guava, orange, lemon) with meals; it helps the body take in iron.\n"
+     "- Do not drink tea or coffee within one hour of meals; it blocks iron.\n"
+     "- Take the deworming tablet every six months, as given by the school or health centre.\n"
+     "- Girls, pregnant women and young children should take the iron tablets given by the health centre.\n"
+     "- Wear slippers outside to avoid hookworm infection.\n\n"
+     "A simple blood test (haemoglobin) at the health centre shows whether you have anaemia."),
+    ("Taking your medicines safely", "GENERAL_HEALTH",
+     "- Take medicines exactly as your doctor wrote: the right dose, at the right time, for the full number of days.\n"
+     "- Finish the full course of antibiotics and TB medicines even if you feel better.\n"
+     "- Do not stop blood pressure, sugar or heart medicines on your own. Ask the doctor first.\n"
+     "- Do not share your medicines or use someone else's prescription.\n"
+     "- Check the expiry date. Keep medicines in a cool, dry place, out of children's reach.\n"
+     "- Tell the doctor about all other medicines you take, and if you are pregnant or breastfeeding.\n\n"
+     "If you get a rash, swelling of the face or lips, or difficulty breathing after a medicine, stop it and go to hospital at once."),
+    ("Tobacco and alcohol harm your health", "PREVENTIVE_HEALTHCARE",
+     "Tobacco in any form (beedi, cigarette, gutka, khaini) causes cancer of the mouth, throat and lungs, heart attacks and TB.\n"
+     "Alcohol damages the liver, heart and brain, causes accidents, and harms families.\n\n"
+     "- It is never too late to stop. Your body starts to heal within weeks of stopping.\n"
+     "- Ask the health centre about help to quit. The national quitline 1800-11-2356 is free.\n"
+     "- Keep children and pregnant women away from tobacco smoke.\n\n"
+     "See a doctor if you have a mouth ulcer or white or red patch that does not heal in two weeks."),
+    ("Caring for elderly family members", "ELDERLY_CARE",
+     "- Help them take their regular medicines for blood pressure, sugar and other illnesses on time. A pill box helps.\n"
+     "- Get their blood pressure and sugar checked regularly at the health centre.\n"
+     "- Prevent falls: keep floors dry, add light at night, and give a walking stick if needed.\n"
+     "- Encourage light exercise such as walking, and a diet with less salt, sugar and oil.\n"
+     "- Check their eyes, hearing and teeth; these problems are often treatable.\n"
+     "- Spend time with them. Loneliness and sadness are also health problems.\n\n"
+     "Go to hospital at once for sudden weakness of one side of the body, slurred speech, chest pain, confusion or a bad fall."),
+]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Seed healthcare FAQs and disease information")
     parser.add_argument("--publish", action="store_true", help="insert as PUBLISHED instead of DRAFT")
@@ -124,7 +188,8 @@ def main() -> None:
     try:
         admin = db.query(User).filter(User.role == UserRole.ADMIN.value, User.is_verified.is_(True)).first()
         created = []
-        for ctype, rows in ((ContentType.FAQ, FAQS), (ContentType.DISEASE_INFO, DISEASES)):
+        for ctype, rows in ((ContentType.FAQ, FAQS), (ContentType.DISEASE_INFO, DISEASES),
+                            (ContentType.ARTICLE, AWARENESS)):
             for title, category, body in rows:
                 if db.query(HealthcareContent).filter(HealthcareContent.title == title,
                                                       HealthcareContent.language_code == "en").first():
@@ -145,7 +210,8 @@ def main() -> None:
             langs = [lang for lang in args.translate if lang != "en"]
             targets = db.query(HealthcareContent).filter(
                 HealthcareContent.language_code == "en",
-                HealthcareContent.content_type.in_([ContentType.FAQ.value, ContentType.DISEASE_INFO.value])).all()
+                HealthcareContent.content_type.in_([ContentType.FAQ.value, ContentType.DISEASE_INFO.value,
+                                                    ContentType.ARTICLE.value])).all()
             for item in targets:
                 try:
                     copies = knowledge_service.translate_item(db, item, langs, admin)

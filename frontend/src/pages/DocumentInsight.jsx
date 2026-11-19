@@ -1,4 +1,4 @@
-import { ArrowLeft, FileText, Languages, RefreshCw, ScanText, Sparkles } from 'lucide-react'
+import { ArrowLeft, Eye, FileImage, FileText, Languages, RefreshCw, ScanText, Sparkles } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import {
@@ -11,6 +11,46 @@ import { aiApi, documentApi, errorMessage } from '../services/api'
 import { LANGUAGES, formatDateTime, labelFor, languageLabel } from '../utils/constants'
 
 const POLL_MS = 3000
+
+/** The uploaded prescription itself, shown beside the translation and included when printing. */
+function OriginalDocument({ doc }) {
+  const [url, setUrl] = useState(null)
+  const [failed, setFailed] = useState(false)
+  useEffect(() => {
+    let objectUrl = null
+    let cancelled = false
+    documentApi.objectUrl(doc)
+      .then((u) => { objectUrl = u; if (cancelled) URL.revokeObjectURL(u); else setUrl(u) })
+      .catch(() => setFailed(true))
+    return () => { cancelled = true; if (objectUrl) URL.revokeObjectURL(objectUrl) }
+  }, [doc])
+
+  const isPdf = doc.mime_type === 'application/pdf'
+  return (
+    <section className="card space-y-3 lg:sticky lg:top-4">
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="flex items-center gap-2 font-semibold">
+          <FileImage className="h-5 w-5 text-brand-700" />Your original {labelFor(doc.document_type).toLowerCase()}
+        </h2>
+        {url && (
+          <a href={url} target="_blank" rel="noreferrer" className="no-print btn-ghost px-2 py-1 text-sm">
+            <Eye className="h-4 w-4" />Full size
+          </a>
+        )}
+      </div>
+      <p className="text-xs text-slate-500">{doc.document_name}{doc.document_date ? ` · ${doc.document_date}` : ''}</p>
+      {failed ? <Alert type="warning">The original file could not be loaded.</Alert> : !url ? <Spinner /> : isPdf ? (
+        <>
+          <iframe src={url} title={doc.document_name} className="no-print h-[32rem] w-full rounded-xl border border-slate-200" />
+          <p className="hidden text-sm text-slate-600 print:block">The original is a PDF file: print it separately from the Documents page.</p>
+        </>
+      ) : (
+        <img src={url} alt={`Original ${labelFor(doc.document_type).toLowerCase()}: ${doc.document_name}`}
+          className="mx-auto max-h-[36rem] w-full rounded-xl border border-slate-200 bg-slate-50 object-contain print:max-h-[55vh] print:border-0" />
+      )}
+    </section>
+  )
+}
 
 export default function DocumentInsight() {
   const { documentId } = useParams()
@@ -131,6 +171,9 @@ ${result.translation}`} />
               confirm these with your doctor or pharmacist.
             </Alert>
           )}
+          <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+          {doc && <OriginalDocument doc={doc} />}
+          <div className="min-w-0 space-y-6">
           <Section icon={Sparkles} title="In simple words">
             <p className="whitespace-pre-line text-lg leading-relaxed text-slate-800">{result.summary}</p>
           </Section>
@@ -149,6 +192,8 @@ ${result.translation}`} />
           </section>
           <p className="text-xs text-slate-400">Prepared {formatDateTime(analysis.completed_at)}</p>
           <AiDisclaimer />
+          </div>
+          </div>
         </>
       )}
     </div>

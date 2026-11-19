@@ -90,6 +90,9 @@ def run_structured(system: str, content: list[dict], output: type[T], *, max_tok
 
     try:
         response = _client().responses.parse(**params)
+    except ValueError as exc:  # pydantic ValidationError: truncated or garbled JSON (e.g. the model got stuck repeating)
+        logger.error("OpenAI returned invalid structured output for %s: %s", output.__name__, str(exc)[:200])
+        raise AIError(status_code=502, detail="The AI answer was cut short or garbled. Please try again.")
     except openai.AuthenticationError:
         logger.error("OpenAI rejected the API key (401)")
         raise AIError(status_code=503, detail="OpenAI rejected the API key. Create a new key at "
@@ -238,7 +241,11 @@ def simplify_text(text: str, language: str) -> SimplificationResult:
 
 def extract_entities(text: str, language: str) -> ExtractionResult:
     task = (f"Identify the diseases, medicines, tests, treatment instructions, symptoms and follow-up in the medical text below. "
-            f"Write explanations in {language_name(language)}.")
+            f"Write explanations in {language_name(language)}.\n"
+            "- Include every medicine and supplement, including ORS, syrups, ointments, drops and injections.\n"
+            "- Write frequency and timing in plain words (e.g. BD -> twice a day, PC -> after food, SOS -> only when needed), "
+            "and expand abbreviated disease names (e.g. T2DM -> Type 2 diabetes).\n"
+            "- Every advice line (diet, fluids, things to avoid, tests to repeat, when to return) is a separate instruction.")
     return run_structured(BASE_RULES, [{"type": "text", "text": task}, _text_block("medical_text", text)], ExtractionResult)
 
 
@@ -269,5 +276,13 @@ def symptom_guidance(symptoms: str, language: str, age: int | None, gender: str 
 def translate_content(title: str, body: str, target_language: str) -> ContentTranslation:
     task = (f"Translate this health education article into {language_name(target_language)} for rural readers. "
             "Keep the meaning and structure (paragraphs, lists) and use simple everyday words. Translate the title too.")
-    return run_structured(BASE_RULES, [{"type": "text", "text": task},
-                                       _text_block("title", title), _text_block("body", body)], ContentTranslation)
+    content = [{"type": "text", "text": task}, _text_block("title", title), _text_block("body", body)]
+    # Indian scripts need several tokens per character; this leaves ample room but stops a runaway repetition loop early.
+    limit = 1500 + 4 * (len(title) + len(body))
+    try:
+        return run_structured(BASE_RULES, content, ContentTranslation, max_tokens=limit)
+    except AIError as exc:
+        if exc.status_code != 502:
+            raise
+        logger.warning("Retrying translation of '%s' into %s", title[:60], target_language)
+        return run_structured(BASE_RULES, content, ContentTranslation, max_tokens=limit, temperature=0)

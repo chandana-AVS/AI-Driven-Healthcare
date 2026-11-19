@@ -57,11 +57,22 @@ def translate_item(db: Session, item: HealthcareContent, languages: list[str], a
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Translations already exist for every selected language")
     ai_service.enforce_daily_limit(db, admin)
 
+    def attempt(lang):
+        try:
+            return ai_service.translate_content(item.title, item.body, lang)
+        except HTTPException as exc:  # keep the languages that worked; a failed one can simply be requested again
+            return exc
+
     with ThreadPoolExecutor(max_workers=min(4, len(targets))) as pool:  # languages translated in parallel
-        results = list(pool.map(lambda lang: ai_service.translate_content(item.title, item.body, lang), targets))
+        results = list(pool.map(attempt, targets))
+    failures = [r for r in results if isinstance(r, HTTPException)]
+    if len(failures) == len(results):
+        raise failures[0]
 
     created = []
     for lang, tr in zip(targets, results):
+        if isinstance(tr, HTTPException):
+            continue
         copy = HealthcareContent(
             id=uuid.uuid4(), title=tr.title[:255], body=tr.body, category=item.category, content_type=item.content_type,
             language_code=lang, status=ContentStatus.DRAFT.value, created_by=admin.id, translation_group_id=group,

@@ -91,7 +91,7 @@ about this, get their consent, and check your data-processing agreement and rete
 
 ## Tests
 
-`backend/tests/test_ai.py` has 17 tests with the AI calls faked, so no API usage is spent. They cover:
+`backend/tests/test_ai.py` has 18 tests with the AI calls faked, so no API usage is spent. They cover:
 - text endpoints, validation and the daily limit
 - the knowledge-base link in symptom answers
 - the document analysis lifecycle, including reuse, `force` and failure recording
@@ -100,4 +100,4 @@ about this, get their consent, and check your data-processing agreement and rete
 - handling of refusals, cut-short answers and a rejected API key
 - the API key never appearing in logs
 
-The full suite has 87 tests.
+The full suite has 88 tests.

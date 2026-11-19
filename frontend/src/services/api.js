@@ -107,6 +107,11 @@ export const documentApi = {
     a.remove()
     setTimeout(() => URL.revokeObjectURL(url), 1000)
   },
+  /** Fetch the file with the auth header and return a temporary object URL (caller must revoke it). */
+  objectUrl: async (doc) => {
+    const res = await api.get(`/documents/${doc.id}/download`, { responseType: 'blob' })
+    return URL.createObjectURL(new Blob([res.data], { type: doc.mime_type }))
+  },
   /** Open in a new tab for viewing (PDF/images). */
   view: async (doc) => {
     const win = window.open('', '_blank')

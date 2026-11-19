@@ -277,3 +277,16 @@ def test_document_reading_uses_vision_model_and_high_detail(monkeypatch):
     assert sum(1 for b in captured["content"] if b["type"] == "image") >= 3
     parts = ai_service._to_openai_content([b for b in captured["content"] if b["type"] == "image"][:1])
     assert parts[0]["detail"] == "high"
+
+
+def test_garbled_ai_output_becomes_clean_error(monkeypatch):
+    from pydantic import ValidationError
+    monkeypatch.setattr(settings, "OPENAI_API_KEY", "test-key")
+    try:
+        s.ContentTranslation.model_validate_json('{"title": "cut')
+    except ValidationError as exc:
+        garbled = exc
+    monkeypatch.setattr(ai_service, "_client", lambda: _FakeClient(exc=garbled))
+    with pytest.raises(ai_service.AIError) as err:
+        ai_service.run_structured("sys", [], s.ContentTranslation)
+    assert err.value.status_code == 502
